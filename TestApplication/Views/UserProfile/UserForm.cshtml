@@ -1,0 +1,260 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model TestApplication.ViewModels.UserFormViewModel
+@{
+    ViewBag.Title = "New User Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Add New User</h4>
+@using (Html.BeginForm(new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true, "Please fix errors first")
+    <div class="form-group" style="width:250px">
+        @Html.LabelFor(x => x.User.FirstName)
+        @Html.TextBoxFor(x => x.User.FirstName, new { @class = "form-control", id = "FirstName" })
+        @Html.ValidationMessageFor(x => x.User.FirstName)
+
+    </div>
+
+    <div class="form-group" style="width:250px">
+        @Html.LabelFor(x => x.User.LastName)
+        @Html.TextBoxFor(x => x.User.LastName, new { @class = "form-control", id = "LastName" })
+        @Html.ValidationMessageFor(x => x.User.LastName)
+    </div>
+
+    <div class="form-group" style="width:250px">
+        @Html.LabelFor(x => x.User.Email)
+        @Html.TextBoxFor(x => x.User.Email, new { @class = "form-control", id = "Email" })
+        @Html.ValidationMessageFor(x => x.User.Email)
+    </div>
+
+    <div class="form-group" style="width:250px">
+        @Html.LabelFor(x => x.User.Phone)
+        @Html.TextBoxFor(x => x.User.Phone, new { @class = "form-control", id = "Phone" })
+        @Html.ValidationMessageFor(x => x.User.Phone)
+    </div>
+
+    <div class="form-group" style="width:250px">
+        @Html.LabelFor(x => x.User.Country)
+        @Html.TextBoxFor(x => x.User.Country, new { @class = "form-control", id = "Country" })
+        @Html.ValidationMessageFor(x => x.User.Country)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(x => x.User.Hobbies)
+        @Html.TextBoxFor(x => x.User.Hobbies, new { @class = "form-control", id = "Hobbies" })
+        @Html.ValidationMessageFor(x => x.User.Hobbies)
+    </div>
+
+    <div>
+        @Html.LabelFor(x => x.User.ProfilePicture)
+        <input type="file" name="ImageData" id="ImageData" placeholder="Choose Profile Pic" />
+    </div>
+
+
+
+    <body>
+        <table id="tblUsers" class="table" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th style="width:150px">Title</th>
+                    <th style="width:150px">University Name</th>
+                    <th style="width:150px">Date Of Graduation</th>
+                    <th style="width:150px">Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @*@for (int i = 0; i < Model.Educations.Count(); i++)
+                {
+                    <tr>
+                        
+                        <td>
+                            @Html.TextBoxFor(m => m.Educations.ToList()[i].Title, new { @class = "form-control", id = "txtTitle" })
+                            @Html.ValidationMessageFor(m => m.Educations.ToList()[i].Title)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.Educations.ToList()[i].UniversityName, new { @class = "form-control", id = "txtUniversityName" })
+                            @Html.ValidationMessageFor(m => m.Educations.ToList()[i].UniversityName)
+                        </td>
+                        <td><input type="button" value="Remove" onclick="Remove(this)" /></td>
+                    </tr>
+
+                }*@
+
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><input type="text" id="txtTitle"  required /></td>
+                    <td><input type="text" id="txtUniversityName"  required /></td>
+                    <td><input type="date" id="txtDateOfGraduation" value=@DateTime.Now.ToShortDateString() min="1970-01-01" max=@DateTime.Now.ToShortDateString() required></td>
+                    <td><input type="text" id="txtDescription" required /></td>
+                    <td><input type="button" id="btnAdd" value="Add" /></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <button id="btnSave" class="btn btn-primary">Save</button>
+    </body>
+
+}
+
+
+@section Scripts {
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript">
+
+        var counter = 1;
+
+        $("body").on("click", "#btnAdd", function () {
+
+            
+            if (counter <= 10) {
+                //Reference the Name and Country TextBoxes.
+                var txtTitle = $("#txtTitle");
+                var txtUniversityName = $("#txtUniversityName");
+                var txtDateOfGraduation = $("#txtDateOfGraduation");
+                var txtDescription = $("#txtDescription");
+
+                //Get the reference of the Table's TBODY element.
+                var tBody = $("#tblUsers > TBODY")[0];
+
+                //Add Row.
+                var row = tBody.insertRow(-1);
+
+                //Add Title cell.
+                var cell = $(row.insertCell(-1));
+                cell.html(txtTitle.val());
+                txtTitle.attr("required",true)
+
+                //Add University cell.
+                cell = $(row.insertCell(-1));
+                cell.html(txtUniversityName.val());
+                txtUniversityName.attr("required", true)
+
+                //Add DateOfGraduation cell.
+                cell = $(row.insertCell(-1));
+                cell.html(txtDateOfGraduation.val());
+                txtDateOfGraduation.attr("required", true)
+                txtDateOfGraduation.val();
+                //Add Description cell.
+                cell = $(row.insertCell(-1));
+                cell.html(txtDescription.val());
+               
+
+
+                //Add Button cell.
+                cell = $(row.insertCell(-1));
+                var btnRemove = $("<input />");
+                btnRemove.attr("type", "button");
+                btnRemove.attr("onclick", "Remove(this);");
+                btnRemove.val("Remove");
+                cell.append(btnRemove);
+
+                //Clear the TextBoxes.
+                txtTitle.val("");
+                txtUniversityName.val("");
+                
+                txtDescription.val("");
+
+                counter++;
+            }
+
+
+
+        });
+
+        function Remove(button) {
+            //Determine the reference of the Row using the Button.
+            var row = $(button).closest("TR");
+            var name = $("TD", row).eq(0).html();
+            if (confirm("Do you want to delete: " + name)) {
+                //Get the reference of the Table.
+                var table = $("#tblUsers")[0];
+
+                //Delete the Table row using it's Index.
+                table.deleteRow(row[0].rowIndex);
+
+                counter--;
+            }
+        };
+
+
+        $("body").on("click", "#btnSave", function () {
+
+            var tmpVal = false;
+
+            $("#tblUsers TBODY TR").each(function () {
+                var row = $(this);
+                
+                var Title = row.find("TD").eq(0).html();
+                var UniversityName = row.find("TD").eq(1).html();
+                var DateOfGraduation = row.find("TD").eq(2).html();
+
+                if (Title === '' || UniversityName === '') {
+                    tmpVal = true;
+                }
+               
+            });
+
+            if (tmpVal) {
+                return;
+            }
+
+            var user = {};
+
+            user.FirstName = $("#FirstName").val();
+            user.LastName = $("#LastName").val();
+            user.Email = $("#Email").val();
+            user.Phone = $("#Phone").val();
+            user.Country = $("#Country").val();
+            user.Hobbies = $("#Hobbies").val();
+            user.ProfilePicture = $("#ImageData").val();
+
+            //Loop through the Table rows and build a JSON array.
+            var educations = new Array();
+            $("#tblUsers TBODY TR").each(function () {
+                var row = $(this);
+                var education = {};
+                education.Title = row.find("TD").eq(0).html();
+                education.UniversityName = row.find("TD").eq(1).html();
+                education.DateOfGraduation = row.find("TD").eq(2).html();
+                education.Description = row.find("TD").eq(3).html();
+                educations.push(education);
+            });
+
+            var userEducation = { User: user, Educations: educations };
+
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "https://localhost:44346/api/User/SaveToList",
+                data: JSON.stringify(userEducation),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    alert('Operation Done !');
+                },
+
+                error: function (jqXHR, status) {
+                    // error handler
+                    console.log(jqXHR);
+                    //alert('fail' + status.code);
+                }
+            });
+
+           
+
+
+        });
+
+
+    </script>
+}
